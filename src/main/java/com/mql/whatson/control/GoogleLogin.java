@@ -23,13 +23,15 @@ import com.mql.whatson.security.GoogleIdVerifier;
 public class GoogleLogin extends HttpServlet {
 
     private final String HOME_PAGE_URL = "";
+    private final String FLASH_KEY = "FLASH";
 
     @Inject
     private GoogleIdVerifier verifier;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	handleFlash(req);
+	// TODO: add logic to display the appropriate view
     }
 
     @Override
@@ -37,6 +39,9 @@ public class GoogleLogin extends HttpServlet {
 	String userToken = req.getParameter("id_token");
 	GoogleIdToken.Payload payload = null;
 	String CLIENT_ID = getServletContext().getInitParameter("google.client.id");
+
+	handleFlash(req);
+
 	if (userToken == null) {
 	    handleFailure(req, res);
 	} else {
@@ -52,10 +57,20 @@ public class GoogleLogin extends HttpServlet {
     }
 
     /**
+     * ensures Flash messages behavior
+     */
+    private void handleFlash(HttpServletRequest req) {
+	if (req.getSession().getAttribute(FLASH_KEY) != null) {
+	    req.setAttribute(FLASH_KEY, req.getSession().getAttribute(FLASH_KEY));
+	    req.removeAttribute(FLASH_KEY);
+	}
+    }
+
+    /**
      * handles authentication failure
      */
     private void handleFailure(HttpServletRequest req, HttpServletResponse res) {
-
+	req.getSession().setAttribute(FLASH_KEY, "Wrong Credentials !");
     }
 
     /**
