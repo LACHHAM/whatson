@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
@@ -17,7 +18,7 @@ public class GoogleIdVerifier {
      * creates an authentication token and verifies it against the issuer and the
      * audience
      */
-    public GoogleIdToken.Payload getPayload(String token, final String googleClientID) {
+    public Payload getPayload(String token, final String googleClientID) {
 
 	JacksonFactory factory = new JacksonFactory();
 	NetHttpTransport transport = new NetHttpTransport();
